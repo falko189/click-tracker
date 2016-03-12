@@ -7,15 +7,15 @@
  * Author:            Wesolvegroup
  * Author URI:        http://www.wesolvegroup.it
  */
-
-
 global $wpdb;
 // Define the complete directory path
 define('CT_DIR', dirname(__FILE__));
+define('CT_FILE', __FILE__);
 // Define the complete directory path
 define('CT_TABLE_NAME', $wpdb->prefix . 'clicktracker');
 
 add_action('wp_ajax_click_tracker', 'click_tracker_callback');
+
 /**
  * 
  * @global type $current_user
@@ -25,14 +25,14 @@ add_action('wp_ajax_click_tracker', 'click_tracker_callback');
 function click_tracker_callback() {
     global $current_user;
     global $wpdb;
-    
+
     $r = $wpdb->insert(
             CT_TABLE_NAME, array(
         'userid' => $current_user->ID,
         'data' => $_POST['link-clicked'],
             )
     );
-    print (!$r)?  "Sql error":  "id : " . $wpdb->insert_id; //retunr like
+    print (!$r) ? "Sql error" : "id : " . $wpdb->insert_id; //retunr like
     wp_die(); // this is required to terminate immediately and return a proper response
 }
 
@@ -62,31 +62,11 @@ function click_tracker_js() {
         });
     </script> <?php
 }
-include_once 'shortcodes.php';
 
-///////////// INSTALL PLUGIN /////////////
-function ct_install() {
-    global $wpdb;
+if (is_admin()) {
+    include_once 'install.inc.php';
 
-    $table_name = CT_TABLE_NAME;
-
-    $charset_collate = $wpdb->get_charset_collate();
-
-    $sql = "CREATE TABLE $table_name (
-    id mediumint(9) NOT NULL AUTO_INCREMENT,
-    time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    userid tinytext NOT NULL,
-    data varchar(255) DEFAULT '' NOT NULL,
-    UNIQUE KEY id (id)
-  ) $charset_collate;";
-
-    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-    dbDelta($sql);
+    include_once 'admin.php';
+} else {
+    include_once 'shortcodes.php';
 }
-
-function ct_install_data() {
-    
-}
-
-register_activation_hook(__FILE__, 'ct_install');
-register_activation_hook(__FILE__, 'ct_install_data');
