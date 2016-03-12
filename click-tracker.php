@@ -32,10 +32,7 @@ function click_tracker_callback() {
         'data' => $_POST['link-clicked'],
             )
     );
-    if($r){
-        
-    }
-    ($r)? "Sql error":"id : " . $wpdb->insert_id;
+    print (!$r)?  "Sql error":  "id : " . $wpdb->insert_id; //retunr like
     wp_die(); // this is required to terminate immediately and return a proper response
 }
 
@@ -65,6 +62,7 @@ function click_tracker_js() {
         });
     </script> <?php
 }
+include_once 'shortcodes.php';
 
 ///////////// INSTALL PLUGIN /////////////
 function ct_install() {

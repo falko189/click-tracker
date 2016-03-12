@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+@license      GNU/GPL v3 or later
+@description  Ant build file for plugin
+ -->
+
+<project name="click-tracker" default="Build ZIP package" basedir=".">
+	<description>Click Tracker</description>
+	<property file="build.properties" />
+
+	<property name="dir.component" location="../src/component" />
+	<property name="dir.mod_yakapaper_filter" location="../src/mod_yakapaper_filter" />
+	<property name="dir.mod_yakapaper_search" location="../src/mod_yakapaper_search" />
+	<property name="dir.plg_search_yakapaper" location="../src/plg_search_yakapaper" />
+	<property name="dir.css" location="../src/css" />
+	<property name="dir.js" location="../src/js" />
+	<property name="dir.release" location="../release" />
+
+	<target name="Build ZIP package" depends="Clean releases">
+		<echo message="Building the ZIP packages..." />
+		<zip destfile="${dir.release}/${component.name}_${current.version}.zip" basedir="${dir.component}" whenempty="fail" />
+		<zip destfile="${dir.release}/mod_yakapaper_filter.zip" basedir="${dir.mod_yakapaper_filter}" whenempty="fail" />
+		<zip destfile="${dir.release}/mod_yakapaper_search.zip" basedir="${dir.mod_yakapaper_search}" whenempty="fail" />
+		<zip destfile="${dir.release}/plg_search_yakapaper.zip" basedir="${dir.plg_search_yakapaper}" whenempty="fail" />
+	</target>
+
+	<target name="Deploy (Local)">
+		<echo message="Deploying locally..." />
+		<!-- Component -->
+		<copy file="${dir.component}/${project.name}.xml" tofile="${path.deploy.local}/administrator/components/${component.name}/${project.name}.xml" overwrite="true" />
+		<copy todir="${path.deploy.local}/administrator/components/${component.name}" overwrite="true">
+			<fileset dir="${dir.component}/backend"></fileset>
+		</copy>
+		<copy todir="${path.deploy.local}/administrator/language" overwrite="true">
+			<fileset dir="${dir.component}/backend/language"></fileset>
+		</copy>
+		<copy todir="${path.deploy.local}/components/${component.name}" overwrite="true">
+			<fileset dir="${dir.component}/frontend"></fileset>
+		</copy>
+		<copy todir="${path.deploy.local}/modules/mod_yakapaper_filter" overwrite="true">
+			<fileset dir="${dir.mod_yakapaper_filter}"></fileset>
+		</copy>
+		<copy todir="${path.deploy.local}/modules/mod_yakapaper_search" overwrite="true">
+			<fileset dir="${dir.mod_yakapaper_search}"></fileset>
+		</copy>
+		<copy todir="${path.deploy.local}/plugins/search/yakapaper" overwrite="true">
+			<fileset dir="${dir.plg_search_yakapaper}"></fileset>
+		</copy>
+		<copy todir="${path.deploy.local}/templates/protostar/css/" overwrite="true">
+			<fileset dir="${dir.css}"></fileset>
+		</copy>
+		<copy todir="${path.deploy.local}/templates/protostar/js/" overwrite="true">
+			<fileset dir="${dir.js}"></fileset>
+		</copy>
+	</target>
+
+	<target name="Clean releases">
+		<echo message="Cleaning the project..." />
+		<delete includeemptydirs="true">
+			<fileset dir="${dir.release}/">
+				<include name="*.zip" />
+			</fileset>
+		</delete>
+	</target>
+
+</project>
