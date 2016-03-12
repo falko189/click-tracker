@@ -3,7 +3,7 @@
  * @package Click Tracker
  * Version:           0.1
  * Plugin Name: Click Tracker
- * Description:       The #1 Coming Soon Page, Under Construction & Maintenance Mode plugin for WordPress.
+ * Description:       With use of a shortcode or with a css class this plugin tracks the click in a table
  * Author:            Wesolvegroup
  * Author URI:        http://www.wesolvegroup.it
  */
