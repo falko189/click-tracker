@@ -65,8 +65,7 @@ function click_tracker_js() {
 
 if (is_admin()) {
     include_once 'install.inc.php';
-
-    include_once 'admin.php';
+    include_once 'admin.inc.php';
 } else {
     include_once 'shortcodes.php';
 }

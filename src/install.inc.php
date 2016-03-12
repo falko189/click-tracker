@@ -1,4 +1,5 @@
 <?php
+
 register_activation_hook(CT_FILE, 'ct_install');
 
 function ct_install() {
