@@ -1,9 +1,14 @@
 <?php
 /**
- * @package Fsa Click Trackere
- * @version 0.1
- * Plugin Name: Fsa Click Trackere
+ * @package Click Tracker
+ * Version:           0.1
+ * Plugin Name: Click Tracker
+ * Description:       The #1 Coming Soon Page, Under Construction & Maintenance Mode plugin for WordPress.
+ * Author:            Wesolvegroup
+ * Author URI:        http://www.wesolvegroup.it
  */
+
+
 global $wpdb;
 // Define the complete directory path
 define('CT_DIR', dirname(__FILE__));
@@ -11,29 +16,26 @@ define('CT_DIR', dirname(__FILE__));
 define('CT_TABLE_NAME', $wpdb->prefix . 'clicktracker');
 
 add_action('wp_ajax_click_tracker', 'click_tracker_callback');
-
+/**
+ * 
+ * @global type $current_user
+ * @global type $wpdb
+ * @return type int Id
+ */
 function click_tracker_callback() {
     global $current_user;
     global $wpdb;
-    // $whatever = intval( $_POST['whatever'] );
-
-    $my_post = array(
-        'comment_status' => 'closed',
-        'ping_status' => 'closed',
-        'post_status' => 'private',
-        'post_type' => 'click_track',
-        'post_content' => '',
-        'post_title' => __('Application', 'click_track'),
-    );
-
-
-    $wpdb->insert(
+    
+    $r = $wpdb->insert(
             CT_TABLE_NAME, array(
         'userid' => $current_user->ID,
         'data' => $_POST['link-clicked'],
             )
     );
-    echo "id : " . $wpdb->insert_id;
+    if($r){
+        
+    }
+    ($r)? "Sql error":"id : " . $wpdb->insert_id;
     wp_die(); // this is required to terminate immediately and return a proper response
 }
 
@@ -41,7 +43,7 @@ add_action('wp_footer', 'click_tracker_js'); // Write our JS below here wp_foote
 
 function click_tracker_js() {
     ?>
-    <script type="text/javascript" >
+    <script>
         jQuery(document).ready(function($) {
             jQuery('.click-tracker').click(function(el) {
                 //<![CDATA[

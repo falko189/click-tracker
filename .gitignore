@@ -11,7 +11,7 @@ coverage
 .coverage
 nbproject
 .nbproject
-build
+build/build.properties
 .build
 .settings
 .settings/.*
