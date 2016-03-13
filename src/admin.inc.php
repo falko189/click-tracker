@@ -11,36 +11,51 @@ function ct_settings_menu() {
 }
 
 function ct_menu_callback() {
-    
-    (!empty($_POST['users']))?  $id = $_POST['users']: $id = '1';
-    
+
+    (!empty($_POST['users'])) ? $id = $_POST['users'] : $id = '1';
+
     global $wpdb;
-    $fivesdrafts = $wpdb->get_results( 
-	"
+    $wpdb2 = clone $wpdb;
+    $impressions = $wpdb->get_results(
+            '
 	SELECT *
-	FROM ".CT_TABLE_NAME."
-	WHERE userid = $id 
-	"
-);
-var_dump($_POST['users']);
-    echo "<div class='row'>";
-    echo "<h2>Statistics of clicks";
-    echo "</div>";
-    echo '<form method="post"><label for="users"><select name="users" class="user-dropdown">
-  <option value="2">Pippo</option>
-  <option value="1">Admin</option>
-  <option value="3">Pluto</option>
-  <option value="4">Federico Rossi</option>
-</select></form>
+	FROM ' . CT_TABLE_NAME . '
+	WHERE userid = '.$id
+    );
+    $users = $wpdb2->get_results(
+            '
+	SELECT ID, user_nicename
+	FROM ' . USERS_TABLE_NAME . '
+	'
+    );
+    echo '<div class="row">';
+    echo '<h2>Statistics of clicks';
+    echo '</div>';
+    echo '<form method="post"><label for="users">User: </label><select name="users" class="user-dropdown">';
+    foreach ($users as $user){
+        $selected = '';
+        if($id == $user->ID){
+            $selected= 'selected="selected"';
+        }
+        echo '<option value="'.$user->ID.'" '.$selected.'>'.$user->user_nicename.'</option>';
+    }
+echo '</select></form>
 <script>
 jQuery(".user-dropdown").change(function() {
     jQuery(this).closest("form").submit();
 });
 </script>
 ';
-    
-foreach ( $fivesdrafts as $fivesdraft ) 
-{
-	echo $fivesdraft->data;
-}
+    if (!empty($impressions)) {
+
+        echo '<table class="table table-striped">';
+        echo '<thead><td>Date Impression</td><td>Link Clicked</td></thead>';
+        foreach ($impressions as $impression) {
+            echo '<tr><td>' . $impression->time . '</td><td>' . $impression->data . '</td></tr>';
+        }
+        echo '</table>';
+    }else {
+        echo 'No impressions';
+        
+    }
 }

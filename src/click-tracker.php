@@ -13,6 +13,7 @@ define('CT_DIR', dirname(__FILE__));
 define('CT_FILE', __FILE__);
 // Define the complete directory path
 define('CT_TABLE_NAME', $wpdb->prefix . 'clicktracker');
+define('USERS_TABLE_NAME', $wpdb->prefix . 'users');
 
 add_action('wp_ajax_click_tracker', 'click_tracker_callback');
 
@@ -25,14 +26,20 @@ add_action('wp_ajax_click_tracker', 'click_tracker_callback');
 function click_tracker_callback() {
     global $current_user;
     global $wpdb;
-
+    echo 'test';
+    wp_die();
+    if(empty($current_user)){
+        $userid = 'an';
+    }else{
+        $userid = $current_user->ID;
+    }
     $r = $wpdb->insert(
             CT_TABLE_NAME, array(
-        'userid' => $current_user->ID,
+        'userid' => $userid,
         'data' => $_POST['link-clicked'],
             )
     );
-    print (!$r) ? "Sql error" : "id : " . $wpdb->insert_id; //retunr like
+    print (!$r) ? 'Sql error' : 'id : ' . $wpdb->insert_id; //retunr like
     wp_die(); // this is required to terminate immediately and return a proper response
 }
 
@@ -42,12 +49,12 @@ function click_tracker_js() {
     ?>
     <script>
         jQuery(document).ready(function($) {
-            jQuery('.click-tracker').click(function(el) {
+            $('.click-tracker').click(function(el) {
                 //<![CDATA[
                 var ajaxurl = '<?php /* TODO: this code sucks */ echo admin_url('admin-ajax.php'); ?>';
                 //]]>
                 var linkClicked = el.currentTarget.href;
-                console.log(el);
+                //console.log(el);
 
                 var data = {
                     'action': 'click_tracker',
@@ -55,9 +62,9 @@ function click_tracker_js() {
                 };
 
                 // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-                jQuery.post(ajaxurl, data, function(response) {
+                $.post(ajaxurl, data, function(response) {
                     // console.log('Got this from the server: ' + response);
-                });
+                }).fail(function() { console.log('err')});
             });
         });
     </script> <?php
