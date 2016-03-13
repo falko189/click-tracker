@@ -10,24 +10,33 @@
 global $wpdb;
 // Define the complete directory path
 define('CT_DIR', dirname(__FILE__));
+define('CT_DIR_SLUG', basename(dirname(__FILE__)));
 define('CT_FILE', __FILE__);
 // Define the complete directory path
 define('CT_TABLE_NAME', $wpdb->prefix . 'clicktracker');
 define('USERS_TABLE_NAME', $wpdb->prefix . 'users');
 
+add_action('plugins_loaded', 'click_tracker_load_lang');
+/**
+ * Load Language in plugin
+ */
+function click_tracker_load_lang() {
+    //mo files https://localise.biz/free/poeditor/demo
+	load_plugin_textdomain('ClickTracker', false, CT_DIR_SLUG . '/lang/' );
+}
+
 add_action('wp_ajax_click_tracker', 'click_tracker_callback');
+add_action('wp_ajax_nopriv_click_tracker', 'click_tracker_callback');
 
 /**
- * 
+ * Callback that insert user and clicked link
  * @global type $current_user
  * @global type $wpdb
- * @return type int Id
+ * @return type int id
  */
 function click_tracker_callback() {
     global $current_user;
     global $wpdb;
-    echo 'test';
-    wp_die();
     if(empty($current_user)){
         $userid = 'an';
     }else{
@@ -44,7 +53,9 @@ function click_tracker_callback() {
 }
 
 add_action('wp_footer', 'click_tracker_js'); // Write our JS below here wp_footer
-
+/**
+ * Jquery action that callback the db insert
+ */
 function click_tracker_js() {
     ?>
     <script>
