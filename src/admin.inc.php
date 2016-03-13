@@ -37,7 +37,7 @@ function ct_menu_callback() {
     echo '<div class="row">';
     echo '<h2>Statistics of clicks';
     echo '</div>';
-    echo '<form method="post"><label for="users">' . __('Users', 'ClickTracker') . '</label><select name="users" class="user-dropdown">';
+    echo '<form method="post"><label for="users">' . __('Users', 'click-tracker') . '</label><select name="users" class="user-dropdown">';
     foreach ($users as $user) {
         $selected = '';
         if ($id == $user->ID) {
@@ -52,7 +52,7 @@ function ct_menu_callback() {
           ';
     if (!empty($impressions)) {
 
-        echo '<table><thead><td>' . __('Date Impression', 'ClickTracker') . '</td><td>' . __('Link Clicked', 'ClickTracker') . '</td></thead>';
+        echo '<table><thead><td>' . __('Date Impression', 'click-tracker') . '</td><td>' . __('Link Clicked', 'click-tracker') . '</td></thead>';
         foreach ($impressions as $impression) {
             echo '<tr><td>' . $impression->time . '</td><td>' . $impression->data . '</td></tr>';
         }

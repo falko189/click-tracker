@@ -22,7 +22,7 @@ add_action('plugins_loaded', 'click_tracker_load_lang');
  */
 function click_tracker_load_lang() {
     //mo files https://localise.biz/free/poeditor/demo
-	load_plugin_textdomain('ClickTracker', false, CT_DIR_SLUG . '/lang/' );
+	load_plugin_textdomain('click-tracker', false, CT_DIR_SLUG . '/lang/' );
 }
 
 add_action('wp_ajax_click_tracker', 'click_tracker_callback');
